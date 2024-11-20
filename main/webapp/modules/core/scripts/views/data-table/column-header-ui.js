@@ -113,6 +113,24 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
   var self = this;
   var menu = [
     {
+      id: "core/facet",
+      label: $.i18n('core-views/facet'),
+      width: "170px",
+      submenu: []
+    },
+    {},
+    {
+      id: "core/edit-cells",
+      label: $.i18n('core-views/edit-cells'),
+      width: "170px",
+      submenu: []
+    },
+    {
+      id: "core/edit-column",
+      label: $.i18n('core-views/edit-column'),
+      submenu: []
+    },
+    {
       id: "core/create",
       label: $.i18n('core-views/create'),
       submenu: [
@@ -131,25 +149,6 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
           }
         }
       ]
-    },
-    
-    {
-      id: "core/facet",
-      label: $.i18n('core-views/facet'),
-      width: "170px",
-      submenu: []
-    },
-    {},
-    {
-      id: "core/edit-cells",
-      label: $.i18n('core-views/edit-cells'),
-      width: "170px",
-      submenu: []
-    },
-    {
-      id: "core/edit-column",
-      label: $.i18n('core-views/edit-column'),
-      submenu: []
     },
     {
       id: "core/transpose",
