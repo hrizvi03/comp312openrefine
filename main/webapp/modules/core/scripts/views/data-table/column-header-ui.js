@@ -113,6 +113,27 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
   var self = this;
   var menu = [
     {
+      id: "core/create",
+      label: $.i18n('core-views/create'),
+      submenu: [
+        {
+          id: "core/add-new-column",
+          label: $.i18n('core-views/add-new-column'),
+          click: function() {
+            Refine.postProcess(
+              "core", 
+              "add-column-based-on", 
+              {}, 
+              {}, 
+              { columnName: self._column.name }, 
+              { modelsChanged: true }
+            );
+          }
+        }
+      ]
+    },
+    
+    {
       id: "core/facet",
       label: $.i18n('core-views/facet'),
       width: "170px",
