@@ -132,11 +132,11 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
     },
     {
       id: "core/create",
-      label: $.i18n('core-views/create'),
+      label: "Create Column",  // Directly set the label as "Create Column"
       submenu: [
         {
           id: "core/add-new-column",
-          label: $.i18n('core-views/add-new-column'),
+          label: $.i18n('core-views/add-new-column'), // This can remain if you want the submenu label to be localized
           click: function() {
             Refine.postProcess(
               "core", 
