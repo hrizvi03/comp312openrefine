@@ -382,17 +382,15 @@ DataTableView.prototype._renderDataTables = function(table, tableHeader, colGrou
 
   var renderColumnGroups = function(groups, keys) {
     var nextLayer = [];
-  
+
     if (groups.length > 0) {
       var tr = tableHeader.insertRow(tableHeader.rows.length);
       $(tr.appendChild(document.createElement("th"))).attr('colspan', '3'); // star, flag, row index
-  
-      // Render each column group and its subgroups
+
       for (var c = 0; c < columns.length; c++) {
         var foundGroup = false;
         var columnGroup;
-  
-        // Loop through the column groups to find the matching group for the current column
+
         for (var g = 0; g < groups.length; g++) {
           columnGroup = groups[g];
           if (columnGroup.startColumnIndex == c) {
@@ -400,34 +398,24 @@ DataTableView.prototype._renderDataTables = function(table, tableHeader, colGrou
             break;
           }
         }
-  
+
         var th = tr.appendChild(document.createElement("th"));
-        
-        // If the column belongs to a group, set colspan and add styling
         if (foundGroup) {
           th.setAttribute("colspan", columnGroup.columnSpan);
-          th.style.background = "#FF6A00"; // This is for the group’s styling
-  
-          // If a key column is specified for this group, add it to keys
+          th.style.background = "#FF6A00";
+
           if (columnGroup.keyColumnIndex >= 0) {
             keys.push(columnGroup.keyColumnIndex);
           }
-  
-          // Skip the number of columns spanned by the group
+
           c += (columnGroup.columnSpan - 1);
-  
-          // If the group has subgroups, add them to the next layer to be processed
+
           if ("subgroups" in columnGroup) {
             nextLayer = nextLayer.concat(columnGroup.subgroups);
           }
-        } else {
-          // If the column is not in any group, render it as a regular column
-          th.textContent = columns[c].name || ''; // Assuming columns[c] holds the name of the column
         }
       }
     }
-  };
-  
 
     renderColumnKeys(keys);
 

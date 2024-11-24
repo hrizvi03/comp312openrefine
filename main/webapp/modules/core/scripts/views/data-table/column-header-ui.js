@@ -136,18 +136,28 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
       submenu: [
         {
           id: "core/add-new-column",
-          label: "Add New Column", // Directly set the label as "Add New Column" 
-          click: function() {
-            Refine.postProcess(
-              "core", 
-              "add-column-based-on", 
-              {}, 
-              {}, 
-              { columnName: self._column.name }, 
-              { modelsChanged: true }
-            );
+          label: "Add New Column",
+          click: function() { // Prompt user for the new column name
+            var columnName = prompt("Enter the name of the new column:");
+            if (columnName) {
+              Refine.postProcess(
+                "core",
+                "add-column",
+                {}, // No URL parameters
+                {
+                  baseColumnName: self._column.name, // Column after which the new column will be added
+                  expression: "value",              // Default expression (copies values)
+                  onError: "set-to-blank",          // Handles errors gracefully
+                  newColumnName: columnName         // New column name
+                },
+                { modelsChanged: true } // Indicates models will change
+              );
+            } else {
+              alert("Column creation canceled.");
+            }
           }
         }
+        
       ]
     },
     {
