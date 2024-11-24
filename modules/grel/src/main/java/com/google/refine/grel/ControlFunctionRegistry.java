@@ -118,6 +118,7 @@ import com.google.refine.expr.functions.strings.MD5;
 import com.google.refine.expr.functions.strings.Match;
 import com.google.refine.expr.functions.strings.NGram;
 import com.google.refine.expr.functions.strings.NGramFingerprint;
+import com.google.refine.expr.functions.strings.NormalizeFunction; //zoha added
 import com.google.refine.expr.functions.strings.ParseJson;
 import com.google.refine.expr.functions.strings.ParseUri;
 import com.google.refine.expr.functions.strings.Partition;
@@ -226,6 +227,7 @@ public class ControlFunctionRegistry {
 
         registerFunction("toUppercase", new ToUppercase());
         registerFunction("toLowercase", new ToLowercase());
+        registerFunction("NormalizeFunction", new NormalizeFunction());
         registerFunction("toTitlecase", new ToTitlecase());
 
         registerFunction("detectLanguage", new DetectLanguage());
