@@ -459,3 +459,26 @@ ul.sorting-dialog-blank-error-positions>li {
   cursor: move;
   border-radius: 3px;
 }
+
+.column-edge-highlight-left,
+.column-edge-highlight-right {
+  position: relative;
+}
+
+.column-edge-highlight-left::before,
+.column-edge-highlight-right::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px; /* Thickness of the highlight */
+    background-color: blue; /* Color of the highlight */
+}
+
+.column-edge-highlight-left::before {
+    left: 0; /* Align highlight to the left */
+}
+
+.column-edge-highlight-right::before {
+    right: 0; /* Align highlight to the right */
+}

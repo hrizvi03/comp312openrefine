@@ -614,6 +614,9 @@ DataTableView.prototype._addResizingControls = function(th, index) {
       return;
     }
     self._startResizing(index, e);
+
+    SVGAnimatedLength._addHighlight(th, 'left'); // adding highlight to the left side of a column
+    SVGAnimatedLength._addHighlight(th, 'right');
   });
 
   // add resizing control for the previous column (if uncollapsed)
@@ -626,8 +629,21 @@ DataTableView.prototype._addResizingControls = function(th, index) {
         return;
       }
       self._startResizing(index - 1, e);
+
+      self._addHighlight(th, 'right'); //adding highlight to the right of a column
+      self._addHighlight(th, 'left'); //adding highlight to the left of the column
     });
   }
+}
+
+//Helper function to manage highlighting
+DataTableView.prototype._addHighlight = function(th, direction) {
+  var highlightClass = 'column-edge-highlight-' + direction;
+  $(th).addClass(highlightClass);
+
+  $(document).one('mouseup', function() {
+    $(th).removeClass(highlightClass);
+  });
 }
 
 DataTableView.prototype._showRows = function(paginationOptions, onDone) {
