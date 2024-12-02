@@ -131,28 +131,27 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
       submenu: []
     },
     {
-      id: "core/create",
-      label: "Create Column",
-      submenu: [
+      id: "core/create", // Main menu ID
+      label: "Create Column", // Menu label
+      submenu: [ // List of submenu items
         {
-          id: "core/add-new-column",
-          label: "Add New Column",
-          click: function() {
-            const newColumnName = prompt("Enter the new column name:");
-            if (newColumnName) {
-              Refine.postProcess(
-                "core",
-                "add-column-based-on",
+          id: "core/add-new-column", // Submenu item ID
+          label: "Add New Column", // Submenu label
+          click: function() { // Action when clicked
+            const newColumnName = prompt("Enter the new column name:"); // Ask for the new column name
+            if (newColumnName) { // If a name is entered
+              Refine.postProcess( 
+                "core", // Module name
+                "add-column-based-on", // Operation name
                 {}, // No specific expression or options here
                 {}, // No additional parameters required
                 { 
-                  columnName: self._column.name, 
-                  newColumnName // Pass the new column name 
+                  columnName: self._column.name, // Current column name
+                  newColumnName // New column name 
                 },
                 { modelsChanged: true } // Indicate models were changed
               );
-              // Refresh the frontend to reflect the new column
-              Refine.update({ modelsChanged: true });
+              Refine.update({ modelsChanged: true }); // Refresh the UI
             }
           }
         }
@@ -181,7 +180,7 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
     ),
     {
       id: "core/view",
-      label: "Collapse/Expand",
+      label: "Collapse/Expand", //changed from "View" to "Collapse/Expand"
       tooltip: $.i18n('core-views/collapse-expand'),
       submenu: [
         {
