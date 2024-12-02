@@ -145,14 +145,19 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
                 "add-column-based-on",
                 {}, // No specific expression or options here
                 {}, // No additional parameters required
-                { columnName: self._column.name, newColumnName }, // Pass the new column name
-                { modelsChanged: true } // Indicate that models are modified
+                { 
+                  columnName: self._column.name, 
+                  newColumnName // Pass the new column name 
+                },
+                { modelsChanged: true } // Indicate models were changed
               );
+              // Refresh the frontend to reflect the new column
+              Refine.update({ modelsChanged: true });
             }
           }
         }
       ]
-    },    
+    },        
     {
       id: "core/transpose",
       label: $.i18n('core-views/transpose'),
