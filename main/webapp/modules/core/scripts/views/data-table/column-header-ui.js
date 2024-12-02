@@ -132,24 +132,27 @@ DataTableColumnHeaderUI.prototype._createMenuForColumnHeader = function(elmt) {
     },
     {
       id: "core/create",
-      label: "Create Column",  // Directly set the label as "Create Column"
+      label: "Create Column",
       submenu: [
         {
           id: "core/add-new-column",
-          label: "Add New Column", // Directly set the label as "Add New Column" 
+          label: "Add New Column",
           click: function() {
-            Refine.postProcess(
-              "core", 
-              "add-column-based-on", 
-              {}, 
-              {}, 
-              { columnName: self._column.name }, 
-              { modelsChanged: true }
-            );
+            const newColumnName = prompt("Enter the new column name:");
+            if (newColumnName) {
+              Refine.postProcess(
+                "core",
+                "add-column-based-on",
+                {}, // No specific expression or options here
+                {}, // No additional parameters required
+                { columnName: self._column.name, newColumnName }, // Pass the new column name
+                { modelsChanged: true } // Indicate that models are modified
+              );
+            }
           }
         }
       ]
-    },
+    },    
     {
       id: "core/transpose",
       label: $.i18n('core-views/transpose'),
