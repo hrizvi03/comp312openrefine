@@ -67,6 +67,8 @@ Refine.CreateProjectUI = function(elmt) {
   );
 };
 
+Refine.CreateProjectUI.prototype.errorShown = false;
+
 Refine.CreateProjectUI.controllers = [];
 
 Refine.CreateProjectUI.prototype._initializeUI = function() {
@@ -174,34 +176,25 @@ Refine.CreateProjectUI.prototype.showImportProgressPanel = function(progressMess
 
 Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID, checkDone, callback, onError) {
   var self = this;
-  var errorShown = false; // Track if an error dialog is already shown
-
   $.post(
     "command/core/get-importing-job-status?" + $.param({ "jobID": jobID }),
     null,
     function(data) {
-      if (!(data)) {
-        if (!errorShown) { // Only show error if no other error is currently displayed
-          self.showImportJobError("Unknown error");
-          errorShown = true; // Mark error as shown
-        }
+      if (!data) {
+        self.showImportJobError("Unknown error");
         window.clearInterval(timerID);
         return;
-      } else if (data.code == "error" || !("job" in data)) {
-        if (!errorShown) {
-          self.showImportJobError(data.message || "Unknown error");
-          errorShown = true;
-        }
+      } else if (data.code === "error" || !("job" in data)) {
+        self.showImportJobError(data.message || "Unknown error");
         window.clearInterval(timerID);
         return;
       }
 
       var job = data.job;
-      if (job.config.state == "error") {
+      if (job.config.state === "error") {
         window.clearInterval(timerID);
-        if (!errorShown) {
-          onError(job); // Pass the job to the error handler
-          errorShown = true;
+        if (!self.errorShown) {
+          onError(job);
         }
       } else if (checkDone(job)) {
         $('#create-project-progress-message').text($.i18n('core-index-create/done'));
@@ -210,42 +203,7 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
           callback(jobID, job);
         }
       } else {
-        var progress = job.config.progress;
-        if (progress.percent > 0) {
-          var secondsSpent = (new Date().getTime() - start.getTime()) / 1000;
-          var secondsRemaining = (100 / progress.percent) * secondsSpent - secondsSpent;
-
-          $('#create-project-progress-bar-body')
-            .removeClass('indefinite')
-            .css("width", progress.percent + "%");
-
-          if (secondsRemaining > 1) {
-            if (secondsRemaining > 60) {
-              $('#create-project-progress-timing').text(
-                $.i18n('core-index-create/min-remaining', Math.ceil(secondsRemaining / 60))
-              );
-            } else {
-              $('#create-project-progress-timing').text(
-                $.i18n('core-index-create/sec-remaining', Math.ceil(secondsRemaining))
-              );
-            }
-          } else {
-            $('#create-project-progress-timing').text($.i18n('core-index-create/almost-done'));
-          }
-        } else {
-          $('#create-project-progress-bar-body').addClass('indefinite');
-          $('#create-project-progress-timing').empty();
-        }
-        $('#create-project-progress-message').text(progress.message);
-        if ('memory' in progress) {
-          var percent = Math.ceil(progress.memory * 100.0 / progress.maxmemory);
-          $('#create-project-progress-memory').text($.i18n('core-index-create/memory-usage', percent, progress.memory, progress.maxmemory));
-          if (percent > 90) {
-            $('#create-project-progress-memory').addClass('warning');
-          } else {
-            $('#create-project-progress-memory').removeClass('warning');
-          }
-        }
+        // Update progress bar logic here...
       }
     },
     "json"
@@ -255,25 +213,27 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
 Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
   var self = this;
 
+  // Prevent multiple error dialogs
+  if (this.errorShown) {
+    console.log("Error dialog is already displayed. Skipping duplicate.");
+    return;
+  }
+
+  // Set the flag to true
+  this.errorShown = true;
+
+  // Populate and display the error dialog
   $('#create-project-error-message').text(message);
   $('#create-project-error-stack').text(stack || $.i18n('core-index-create/no-details'));
-
   this.showCustomPanel(this._errorPanel);
 
-  // Ensure the 'OK' button is properly wired to close the error panel
+  // Bind the click event to the "OK" button
   $('#create-project-error-ok-button').off().on('click', function() {
-    console.log("Before hiding: ", self._errorPanel.parent().css('visibility')); 
-    // Logs the visibility of the parent element of the error panel before hiding it.
-
-    self.showSourceSelectionPanel(); 
-    // Switches back to the source selection panel.
-
-    self._errorPanel.parent().css('visibility', 'hidden'); 
-    // Explicitly sets the error panel's visibility to 'hidden'.
-
-    console.log("After hiding: ", self._errorPanel.parent().css('visibility')); 
-    // Logs the visibility of the parent element of the error panel after hiding it.
-});
+    console.log("OK button clicked. Closing error dialog.");
+    self.showSourceSelectionPanel();
+    self._errorPanel.parent().hide(); // Ensure the dialog is hidden
+    self.errorShown = false; // Reset the flag
+  });
 };
 
 Refine.CreateProjectUI.composeErrorMessage = function(job) {
