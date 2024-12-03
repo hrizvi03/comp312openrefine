@@ -44,9 +44,14 @@ Refine.postCSRF = CSRFUtil.postCSRF;
 
 Refine.reportException = function(e) {
   if (window.console) {
-    console.log(e);
+    console.error(e); // Log detailed error in the console.
   }
+  // Display a custom error dialog
+  DialogSystem.showDialog(
+    $("<div>").text("An error occurred: " + e.message).addClass("error-dialog")
+  );
 };
+
 
 function resize() {
   var leftPanelWidth = JSON.parse(Refine.getPreference("ui.browsing.facetsHistoryPanelWidth", 300));
@@ -193,7 +198,7 @@ Refine.setTitle = function(status) {
 Refine.reinitializeProjectData = function(f, fError) {
   function handleError(status, message, fError) {
     if (status === "error") {
-      alert(message);
+      Refine.reportException(new Error(message)); // Use the updated error reporting
       if (fError) {
         fError();
       }
@@ -479,11 +484,16 @@ Refine._confirmHistoryErasure = function(entries, onDone) {
   var elmts = DOM.bind(frame);
   var level = DialogSystem.showDialog(frame);
   
-  elmts.dialogHeader.text($.i18n('core-project/confirm-erasure-of-project-history'));
-  elmts.warningText.text($.i18n('core-project/applying-change-erases-entries', entries.length));
-  elmts.doNotWarnText.text($.i18n('core-project/do-not-warn'));
-  elmts.cancelButton.text($.i18n('core-buttons/cancel'));
-  elmts.okButton.text($.i18n('core-buttons/apply-anyway'));
+  elmts.dialogHeader.text("Confirm Action");
+elmts.warningText.text(`You are about to erase ${entries.length} history entries. Continue?`);
+elmts.cancelButton.text("Cancel").on('click', function() {
+  DialogSystem.dismissUntil(level - 1); // Close dialog without action
+});
+elmts.okButton.text("Proceed").on('click', function() {
+  DialogSystem.dismissUntil(level - 1);
+  onDone(); // Proceed with the action
+});
+
 
   // populate the history entries
   for (let entry of entries) {
