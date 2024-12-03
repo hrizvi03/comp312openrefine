@@ -176,6 +176,7 @@ Refine.CreateProjectUI.prototype.showImportProgressPanel = function(progressMess
 
 Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID, checkDone, callback, onError) {
   var self = this;
+
   $.post(
     "command/core/get-importing-job-status?" + $.param({ "jobID": jobID }),
     null,
@@ -184,7 +185,9 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
         self.showImportJobError("Unknown error");
         window.clearInterval(timerID);
         return;
-      } else if (data.code === "error" || !("job" in data)) {
+      }
+
+      if (data.code === "error" || !("job" in data)) {
         self.showImportJobError(data.message || "Unknown error");
         window.clearInterval(timerID);
         return;
@@ -193,17 +196,13 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
       var job = data.job;
       if (job.config.state === "error") {
         window.clearInterval(timerID);
-        if (!self.errorShown) {
-          onError(job);
-        }
+        onError(job); // Ensure this does not trigger duplicate dialogs
       } else if (checkDone(job)) {
         $('#create-project-progress-message').text($.i18n('core-index-create/done'));
         window.clearInterval(timerID);
         if (callback) {
           callback(jobID, job);
         }
-      } else {
-        // Update progress bar logic here...
       }
     },
     "json"
@@ -213,25 +212,25 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
 Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
   var self = this;
 
-  // Prevent multiple error dialogs
+  // Check if an error dialog is already displayed
   if (this.errorShown) {
-    console.log("Error dialog is already displayed. Skipping duplicate.");
+    console.log("An error dialog is already displayed. Ignoring duplicate error.");
     return;
   }
 
-  // Set the flag to true
+  // Set the flag to indicate an error is shown
   this.errorShown = true;
 
-  // Populate and display the error dialog
+  // Populate the error message and show the dialog
   $('#create-project-error-message').text(message);
   $('#create-project-error-stack').text(stack || $.i18n('core-index-create/no-details'));
   this.showCustomPanel(this._errorPanel);
 
-  // Bind the click event to the "OK" button
+  // Bind "OK" button to hide the error dialog
   $('#create-project-error-ok-button').off().on('click', function() {
-    console.log("OK button clicked. Closing error dialog.");
-    self.showSourceSelectionPanel();
-    self._errorPanel.parent().hide(); // Ensure the dialog is hidden
+    console.log("Closing the error dialog.");
+    self.showSourceSelectionPanel(); // Return to the source selection
+    self._errorPanel.parent().hide(); // Ensure dialog is hidden
     self.errorShown = false; // Reset the flag
   });
 };
