@@ -262,9 +262,11 @@ Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
 
   // Ensure the 'OK' button is properly wired to close the error panel
   $('#create-project-error-ok-button').off().on('click', function() {
-    self.showSourceSelectionPanel(); // Return to the source selection panel
+    console.log("Before hiding: ", self._errorPanel.parent().css('visibility')); // Debugging log
+    self.showSourceSelectionPanel();
     self._errorPanel.parent().css('visibility', 'hidden'); // Explicitly hide the error panel
-  });
+    console.log("After hiding: ", self._errorPanel.parent().css('visibility')); // Debugging log
+  });  
 };
 
 Refine.CreateProjectUI.composeErrorMessage = function(job) {
