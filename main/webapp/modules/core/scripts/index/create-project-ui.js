@@ -174,16 +174,24 @@ Refine.CreateProjectUI.prototype.showImportProgressPanel = function(progressMess
 
 Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID, checkDone, callback, onError) {
   var self = this;
+  var errorShown = false; // Track if an error dialog is already shown
+
   $.post(
     "command/core/get-importing-job-status?" + $.param({ "jobID": jobID }),
     null,
     function(data) {
       if (!(data)) {
-        self.showImportJobError("Unknown error");
+        if (!errorShown) { // Only show error if no other error is currently displayed
+          self.showImportJobError("Unknown error");
+          errorShown = true; // Mark error as shown
+        }
         window.clearInterval(timerID);
         return;
       } else if (data.code == "error" || !("job" in data)) {
-        self.showImportJobError(data.message || "Unknown error");
+        if (!errorShown) {
+          self.showImportJobError(data.message || "Unknown error");
+          errorShown = true;
+        }
         window.clearInterval(timerID);
         return;
       }
@@ -191,11 +199,12 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
       var job = data.job;
       if (job.config.state == "error") {
         window.clearInterval(timerID);
-        
-        onError(job);
+        if (!errorShown) {
+          onError(job); // Pass the job to the error handler
+          errorShown = true;
+        }
       } else if (checkDone(job)) {
         $('#create-project-progress-message').text($.i18n('core-index-create/done'));
-
         window.clearInterval(timerID);
         if (callback) {
           callback(jobID, job);
@@ -207,16 +216,18 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
           var secondsRemaining = (100 / progress.percent) * secondsSpent - secondsSpent;
 
           $('#create-project-progress-bar-body')
-          .removeClass('indefinite')
-          .css("width", progress.percent + "%");
+            .removeClass('indefinite')
+            .css("width", progress.percent + "%");
 
           if (secondsRemaining > 1) {
             if (secondsRemaining > 60) {
               $('#create-project-progress-timing').text(
-                  $.i18n('core-index-create/min-remaining', Math.ceil(secondsRemaining / 60)));
+                $.i18n('core-index-create/min-remaining', Math.ceil(secondsRemaining / 60))
+              );
             } else {
               $('#create-project-progress-timing').text(
-                  $.i18n('core-index-create/sec-remaining', Math.ceil(secondsRemaining) ));
+                $.i18n('core-index-create/sec-remaining', Math.ceil(secondsRemaining))
+              );
             }
           } else {
             $('#create-project-progress-timing').text($.i18n('core-index-create/almost-done'));
@@ -244,11 +255,16 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
 Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
   var self = this;
 
+  // Ensure any existing error dialogs are hidden
+  $('.create-project-ui-panel').css('visibility', 'hidden');
+  
   $('#create-project-error-message').text(message);
   $('#create-project-error-stack').text(stack || $.i18n('core-index-create/no-details'));
 
-  this.showCustomPanel(this._errorPanel);
-  $('#create-project-error-ok-button').off().on('click',function() {
+  this.showCustomPanel(this._errorPanel); // Show the error panel
+  
+  $('#create-project-error-ok-button').off().on('click', function() {
+    // Clear any ongoing error states before returning
     self.showSourceSelectionPanel();
   });
 };
