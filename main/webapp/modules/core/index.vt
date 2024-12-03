@@ -1,36 +1,4 @@
 <!doctype html>
-<!--
-
-Copyright 2010, Google Inc.
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
-
-    * Redistributions of source code must retain the above copyright
-notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above
-copyright notice, this list of conditions and the following disclaimer
-in the documentation and/or other materials provided with the
-distribution.
-    * Neither the name of Google Inc. nor the names of its
-contributors may be used to endorse or promote products derived from
-this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,           
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY           
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
--->
 <html>
 <head>
   <meta charset="utf-8">
@@ -40,39 +8,69 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <script type="text/javascript" src="wirings.js"></script>
   $scriptInjection
   $styleInjection
-  <script>Refine.encodings = $encodingJson; Refine.defaultEncoding = $defaultEncoding;</script>
+  <script>
+    Refine.encodings = $encodingJson; 
+    Refine.defaultEncoding = $defaultEncoding;
+
+    // Redirect to the feedback form
+    function getHelp() {
+      window.location.href = "feedbackform.html";
+    }
+  </script>
+  <style>
+    #help-button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 5px;
+    }
+    #help-button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
 <body>
   <div id="header">
     <img alt="OpenRefine logo" src="images/logo-gem-126.svg" width="30" />
     <h1>OpenRefine</h1>
-    <span id="slogan"></span>
+    <span id="slogan">Your Data Cleaning Companion</span>
   </div>
   
-  <div id="left-panel" class="main-layout-panel"><div id="left-panel-body">
-    <ul id="action-area-tabs">
-    </ul>
-    
-    <div id="project-links">
-      <div id="logo-container">
-        <img alt="OpenRefine" src="images/logo-gem-126.svg" height="65" />
-        <div id="openrefine-version"></div>
-      </div>
-      <ul>
-        <li><a href="preferences" id="or-index-pref"></a></li>
-        <li><a href="https://openrefine.org/docs" id="or-index-help" target="_blank"></a></li>
-        <li><a href="about.html" id="or-index-about"></a></li>
+  <div id="left-panel" class="main-layout-panel">
+    <div id="left-panel-body">
+      <ul id="action-area-tabs">
+        <!-- Action tabs dynamically populated -->
       </ul>
+      <div id="project-links">
+        <div id="logo-container">
+          <img alt="OpenRefine" src="images/logo-gem-126.svg" height="65" />
+          <div id="openrefine-version">Version 3.5</div>
+        </div>
+        <ul>
+          <li><a href="preferences" id="or-index-pref">Preferences</a></li>
+          <li><a href="https://openrefine.org/docs" id="or-index-help" target="_blank">Help Docs</a></li>
+          <li><a href="about.html" id="or-index-about">About</a></li>
+        </ul>
+        <button id="help-button" onclick="getHelp()" style="margin-top: 10px; padding: 5px 10px;">
+          Problems using OpenRefine? Get Help!
+        </button>
+      </div>
     </div>
-  </div></div> <!-- left-panel -->
+  </div> <!-- left-panel -->
 
-  <div id="right-panel" class="main-layout-panel"><div id="right-panel-body">
-  </div></div> <!-- right-panel -->
+  <div id="right-panel" class="main-layout-panel">
+    <div id="right-panel-body">
+      <!-- Right panel dynamically populated -->
+    </div>
+  </div> <!-- right-panel -->
   
   <div id="no-project-message" class="message" style="display: none;">
-    <span id="or-index-noProj"></span><br/>
-    <span id="or-index-try"></span>
-    <a href="https://github.com/OpenRefine/OpenRefine/wiki/Sample-Datasets" target="_blank" id="or-index-sample"></a>.
+    <span id="or-index-noProj">No projects available.</span><br />
+    <span id="or-index-try">Try loading a sample project:</span>
+    <a href="https://github.com/OpenRefine/OpenRefine/wiki/Sample-Datasets" target="_blank" id="or-index-sample">Sample Datasets</a>.
   </div>
 </body>
 </html>
+
