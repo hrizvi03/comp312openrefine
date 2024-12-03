@@ -255,17 +255,15 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
 Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
   var self = this;
 
-  // Ensure any existing error dialogs are hidden
-  $('.create-project-ui-panel').css('visibility', 'hidden');
-  
   $('#create-project-error-message').text(message);
   $('#create-project-error-stack').text(stack || $.i18n('core-index-create/no-details'));
 
-  this.showCustomPanel(this._errorPanel); // Show the error panel
-  
+  this.showCustomPanel(this._errorPanel);
+
+  // Ensure the 'OK' button is properly wired to close the error panel
   $('#create-project-error-ok-button').off().on('click', function() {
-    // Clear any ongoing error states before returning
-    self.showSourceSelectionPanel();
+    self.showSourceSelectionPanel(); // Return to the source selection panel
+    self._errorPanel.parent().css('visibility', 'hidden'); // Explicitly hide the error panel
   });
 };
 
