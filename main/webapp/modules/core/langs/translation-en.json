@@ -142,6 +142,7 @@
     "core-index-open/description": "Description",
     "core-index-open/row-count": "Row&nbsp;Count",
     "core-index-open/last-mod": "Last&nbsp;modified",
+    "core-index-open/date-created": "Date Created",
     "core-index-open/del-title": "Delete this project",
     "core-index-open/del-body": "Are you sure you want to delete project \"$1\"?",
     "core-index-open/new-title": "New project name:",

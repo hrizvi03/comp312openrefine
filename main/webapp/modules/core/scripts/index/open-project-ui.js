@@ -155,6 +155,10 @@ Refine.OpenProjectUI.prototype._renderProjects = function(data) {
       // project.modified is ISO 8601 format string
       const date = new Date(project.modified);
       project.date = dateFormatter.format(date);
+
+      const createdDate = new Date(project.created);
+      project.creationDate = dateFormatter.format(createdDate);
+
       
       if (typeof project.userMetadata !== "undefined")  {
           for (var m in data.customMetadataColumns) {
@@ -188,6 +192,7 @@ Refine.OpenProjectUI.prototype._renderProjects = function(data) {
       '<table class="tablesorter-blue list-table"><thead><tr>' +
       '<th></th>' +
       '<th></th>' +
+      '<th>'+$.i18n('core-index-open/date-created')+'</th>' + //added by me
       '<th>'+$.i18n('core-index-open/last-mod')+'</th>' +
       '<th>'+$.i18n('core-index-open/name')+'</th>' +
       '<th>'+$.i18n('core-index-open/tags')+'</th>' + 
@@ -246,6 +251,12 @@ Refine.OpenProjectUI.prototype._renderProjects = function(data) {
       .appendTo(
         $(tr.insertCell(tr.cells.length))
       );
+
+      //Add Date Created Column
+      $('<div></div>')
+      .html('<span style="display:none">' + project.created + '</span>' + project.creationDate)
+      .addClass("date-created")
+      .appendTo($(tr.insertCell(tr.cells.length)));
       
       $('<div></div>')
       .html('<span style="display:none">' + project.modified + '</span>' + project.date)

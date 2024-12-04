@@ -471,14 +471,14 @@ ul.sorting-dialog-blank-error-positions>li {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 3px; /* Thickness of the highlight */
+    width: 3px; /*Thickness of the highlight*/
     background-color: blue; /* Color of the highlight */
 }
 
 .column-edge-highlight-left::before {
-    left: 0; /* Align highlight to the left */
+    left: 0; /*align highlight to the left*/
 }
 
 .column-edge-highlight-right::before {
-    right: 0; /* Align highlight to the right */
+    right: 0; /*align highlight to the right*/
 }
