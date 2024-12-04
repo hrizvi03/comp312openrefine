@@ -195,8 +195,11 @@ Refine.CreateProjectUI.prototype.pollImportJob = function(start, jobID, timerID,
 
       var job = data.job;
       if (job.config.state === "error") {
+        // Prevent triggering multiple error dialogs
+        if (!self.errorShown) {
+          onError(job); // Only trigger onError if no error dialog is shown
+        }
         window.clearInterval(timerID);
-        onError(job); // Ensure this does not trigger duplicate dialogs
       } else if (checkDone(job)) {
         $('#create-project-progress-message').text($.i18n('core-index-create/done'));
         window.clearInterval(timerID);
