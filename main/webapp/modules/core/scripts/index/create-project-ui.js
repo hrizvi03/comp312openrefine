@@ -230,12 +230,31 @@ Refine.CreateProjectUI.prototype.showImportJobError = function(message, stack) {
   this.showCustomPanel(this._errorPanel);
 
   // Bind "OK" button to hide the error dialog
-  $('#create-project-error-ok-button').off().on('click', function() {
-    console.log("Closing the error dialog.");
-    self.showSourceSelectionPanel(); // Return to the source selection
-    self._errorPanel.parent().hide(); // Ensure dialog is hidden
-    self.errorShown = false; // Reset the flag
-  });
+  $('#create-project-error-ok-button').off().on('click', function () {
+    // Log for debugging to confirm the button was clicked
+    console.log("OK button clicked");
+
+    // Hide the source selection panel (assumes this function works correctly)
+    self.showSourceSelectionPanel();
+
+    // Log the current visibility and display status of the error panel
+    console.log("Before hiding visibility:", $('#create-project-error-panel').css('visibility'));
+    console.log("Before hiding display:", $('#create-project-error-panel').css('display'));
+
+    // Explicitly hide the error panel using CSS
+    $('#create-project-error-panel').css({
+        'visibility': 'hidden',
+        'display': 'none', // Ensures it doesn't take up space
+        'opacity': '0'     // Smooth transition if desired
+    });
+
+    // Log the updated visibility and display status
+    console.log("After hiding visibility:", $('#create-project-error-panel').css('visibility'));
+    console.log("After hiding display:", $('#create-project-error-panel').css('display'));
+
+    // Optional: Completely remove the error panel from the DOM if it's no longer needed
+    // $('#create-project-error-panel').remove();
+});
 };
 
 Refine.CreateProjectUI.composeErrorMessage = function(job) {
