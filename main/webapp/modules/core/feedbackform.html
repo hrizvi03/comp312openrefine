@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenRefine Feedback Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            background-color: white;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Feedback Form</h1>
+        <form action="/submit_feedback" method="POST">
+            <!-- Problem description -->
+            <label for="issue-description">Describe the Issue:</label>
+            <textarea id="issue-description" name="issue_description" rows="5"
+                placeholder="Describe the problem you're encountering..."></textarea>
+
+            <!-- Log file attachment -->
+            <label for="log-file">Attach Log File (optional):</label>
+            <input type="file" id="log-file" name="log_file">
+
+            <!-- Project file attachment -->
+            <label for="project-file">Attach Project File (optional):</label>
+            <input type="file" id="project-file" name="project_file">
+
+            <!-- Submit button -->
+            <button type="submit">Submit Feedback</button>
+        </form>
+    </div>
+
+    <div class="footer">
+        <p>If you have any further questions, please contact our support team.</p>
+    </div>
+</body>
+
+</html>
